@@ -1,5 +1,5 @@
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route'; // твій authOptions
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 export default async function Dashboard() {
     const session = await getServerSession(authOptions);
@@ -14,6 +14,7 @@ export default async function Dashboard() {
     return (
         <div>
             <h1>thx</h1>
+            <p>Welcome, {session.user?.email}</p>
         </div>
     );
 }

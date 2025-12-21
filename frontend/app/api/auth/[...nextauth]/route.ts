@@ -1,3 +1,4 @@
+import { loginSchema } from '@/validation/auth.schema';
 import NextAuth, { type NextAuthOptions } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 
@@ -10,6 +11,15 @@ export const authOptions: NextAuthOptions = {
                 password: {},
             },
             async authorize(credentials) {
+                // try {
+                //     await loginSchema.validate(credentials, { abortEarly: false });
+                // } catch (err: any) {
+                //     const errors: Record<string, string> = {};
+                //     err.inner.forEach((e: any) => {
+                //         if (e.path) errors[e.path] = e.message;
+                //     });
+                //     console.log(errors);
+                // }
                 // 🔥 запит на твій бек
                 const res = await fetch('http://localhost:5000/api/auth/login', {
                     method: 'POST',
@@ -20,7 +30,11 @@ export const authOptions: NextAuthOptions = {
                 const user = await res.json();
                 if (!res.ok) return null;
 
-                return user; // { id, email, accessToken }
+                return {
+                    id: user.id,
+                    email: user.email,
+                    accessToken: user.accessToken,
+                };
             },
         }),
     ],
@@ -30,17 +44,18 @@ export const authOptions: NextAuthOptions = {
     callbacks: {
         async jwt({ token, user }) {
             if (user) {
-                token.accessToken = user.accessToken;
                 token.id = user.id;
+                token.email = user.email; // 👈
+                token.accessToken = user.accessToken;
             }
             return token;
         },
 
         async session({ session, token }) {
-            if (session.user && token.id) {
-                session.user.id = token.id;
+            if (session.user) {
+                session.user.id = token.id!;
+                session.user.email = token.email as string;
             }
-
             session.accessToken = token.accessToken;
             return session;
         },
