@@ -66,25 +66,6 @@ export default function RegisterPage() {
 
     return (
         <div className="min-h-screen bg-gray-50 text-gray-900 font-sans antialiased flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-            {/* Додаємо стилі для анімації прямо в компонент */}
-            <style>{`
-        .fade-in-up {
-          animation: fadeInUp 0.5s ease-out forwards;
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        
-        .delay-100 { animation-delay: 0.1s; }
-        .delay-200 { animation-delay: 0.2s; }
-        
-        @keyframes fadeInUp {
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-      `}</style>
-
             {/* Заголовок та Логотип */}
             <div className="sm:mx-auto sm:w-full sm:max-w-md fade-in-up">
                 <h2 className="mt-2 text-center text-3xl font-extrabold text-gray-900">Створити акаунт</h2>

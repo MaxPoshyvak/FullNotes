@@ -1,8 +1,11 @@
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
+import { Notes } from '@/components/shared';
+
 export default async function Dashboard() {
     const session = await getServerSession(authOptions);
+
     if (!session) {
         return (
             <div>
@@ -12,9 +15,10 @@ export default async function Dashboard() {
     }
 
     return (
-        <div>
-            <h1>thx</h1>
-            <p>Welcome, {session.user?.email}</p>
-        </div>
+        <Notes
+            username={session.user.username as string}
+            email={session.user.email as string}
+            session={session as any}
+        />
     );
 }

@@ -23,8 +23,10 @@ export const loginController = async (req: Request, res: Response) => {
             message: 'Invalid email or password',
         });
     }
+    const secret = process.env.JWT_SECRET;
+    if (!secret) return res.status(500).json({ message: 'JWT_SECRET not configured' });
 
-    const accessToken = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET || 'secretkey', {
+    const accessToken = jwt.sign({ id: user._id, email: user.email }, secret, {
         expiresIn: '1h',
     });
 
@@ -34,8 +36,12 @@ export const loginController = async (req: Request, res: Response) => {
     res.json({
         status: 'ok',
         message: 'User logged in successfully',
-        id: user._id,
         accessToken,
+        user: {
+            id: user._id,
+            username: user.username,
+            email: user.email,
+        },
     });
 };
 

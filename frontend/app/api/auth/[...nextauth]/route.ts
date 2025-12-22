@@ -1,4 +1,3 @@
-import { loginSchema } from '@/validation/auth.schema';
 import NextAuth, { type NextAuthOptions } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 
@@ -11,15 +10,6 @@ export const authOptions: NextAuthOptions = {
                 password: {},
             },
             async authorize(credentials) {
-                // try {
-                //     await loginSchema.validate(credentials, { abortEarly: false });
-                // } catch (err: any) {
-                //     const errors: Record<string, string> = {};
-                //     err.inner.forEach((e: any) => {
-                //         if (e.path) errors[e.path] = e.message;
-                //     });
-                //     console.log(errors);
-                // }
                 // 🔥 запит на твій бек
                 const res = await fetch('http://localhost:5000/api/auth/login', {
                     method: 'POST',
@@ -31,8 +21,9 @@ export const authOptions: NextAuthOptions = {
                 if (!res.ok) return null;
 
                 return {
-                    id: user.id,
-                    email: user.email,
+                    id: user.user.id,
+                    email: user.user.email,
+                    username: user.user.username,
                     accessToken: user.accessToken,
                 };
             },
@@ -46,6 +37,7 @@ export const authOptions: NextAuthOptions = {
             if (user) {
                 token.id = user.id;
                 token.email = user.email; // 👈
+                token.username = user.username;
                 token.accessToken = user.accessToken;
             }
             return token;
@@ -53,8 +45,9 @@ export const authOptions: NextAuthOptions = {
 
         async session({ session, token }) {
             if (session.user) {
-                session.user.id = token.id!;
+                session.user.id = token.id as string;
                 session.user.email = token.email as string;
+                session.user.username = token.username as string;
             }
             session.accessToken = token.accessToken;
             return session;
