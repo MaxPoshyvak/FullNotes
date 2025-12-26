@@ -41,6 +41,6 @@
         "unrs-resolver"
     ],
     "engines": {
-        "node": "18.x"
+        "node": "24.12.0"
     }
 }
