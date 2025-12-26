@@ -11,7 +11,7 @@ export const authOptions: NextAuthOptions = {
             },
             async authorize(credentials) {
                 // 🔥 запит на твій бек
-                const res = await fetch('http://localhost:5000/api/auth/login', {
+                const res = await fetch('https://fullnotes.onrender.com/api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(credentials),
