@@ -25,7 +25,7 @@ export default function RootLayout({
     return (
         <html lang="en">
             <head>
-                <meta http-equiv="Content-Security-Policy" content="..."></meta>
+                <meta httpEquiv="Content-Security-Policy" content="..." />
             </head>
             <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
         </html>

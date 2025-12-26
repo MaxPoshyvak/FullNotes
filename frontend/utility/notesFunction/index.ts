@@ -1,5 +1,4 @@
 import type { Note } from '@/types/Notes';
-import { date } from 'yup';
 
 export const handleDeleteNote = async (
     _id: string,
@@ -12,7 +11,7 @@ export const handleDeleteNote = async (
     setNotes(notes.filter((note) => note._id !== _id));
 
     try {
-        const response = await fetch(`/api/notes/${_id}`, {
+        const response = await fetch(`https://fullnotes.onrender.com/api/notes/${_id}`, {
             method: 'DELETE',
             headers: {
                 Authorization: `Bearer ${session.accessToken}`,
@@ -40,7 +39,7 @@ export const handleUpdateNote = async (
     setNotes((prev) => prev.map((n) => (n._id === _id ? { ...n, ...updatedFields } : n)));
 
     try {
-        await fetch(`/api/notes/${_id}`, {
+        await fetch(`https://fullnotes.onrender.com/api/notes/${_id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -68,7 +67,7 @@ export const handleCreateNote = async (
     if (!title.trim() && !content.trim()) return;
 
     try {
-        const response = await fetch('/api/notes', {
+        const response = await fetch('https://fullnotes.onrender.com/api/notes', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -108,7 +107,7 @@ export const handleCreateNote = async (
 
 export const getNotes = async (session: any, setNotes: React.Dispatch<React.SetStateAction<Note[]>>) => {
     try {
-        const response = await fetch('/api/notes', {
+        const response = await fetch('https://fullnotes.onrender.com/api/notes', {
             headers: {
                 Authorization: `Bearer ${session.accessToken}`,
             },
