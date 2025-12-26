@@ -252,7 +252,7 @@ export default function RegisterPage() {
                 </div>
 
                 <div className="mt-8 text-center">
-                    <p className="text-xs text-gray-400">© 2024 ModernApp Inc. Всі права захищено.</p>
+                    <p className="text-xs text-gray-400">© 2024 NextNotes Inc. Всі права захищено.</p>
                 </div>
             </div>
         </div>

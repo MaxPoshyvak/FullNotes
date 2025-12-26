@@ -3,15 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import { Plus, FileText } from 'lucide-react';
 
-import { CreateNotesModal, NoteCard } from '@/components/ui/';
+import { CreateNotesModal, NoteCard, UpdateNotesModal } from '@/components/ui/';
 import { Header } from '@/components/shared/';
-
-interface Note {
-    _id: string;
-    title: string;
-    content: string;
-    date: string;
-}
+import { Note } from '@/types/Notes';
+import { handleDeleteNote, handleUpdateNote, handleCreateNote, getNotes } from '@/utility/notesFunction';
 
 interface Props {
     username: string;
@@ -24,71 +19,12 @@ export function Notes({ username, session }: Props) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-
-    // Функція створення нотатки
-    const handleCreateNote = async (e: React.FormEvent) => {
-        e.preventDefault();
-        if (!title.trim() && !content.trim()) return;
-
-        const newNote: Note = {
-            _id: Date.now().toString(),
-            title: title || 'Без назви',
-            content: content,
-            date: new Date().toLocaleDateString('uk-UA', {
-                day: 'numeric',
-                month: 'long',
-                hour: '2-digit',
-                minute: '2-digit',
-            }),
-        };
-
-        setNotes([newNote, ...notes]);
-        setTitle('');
-        setContent('');
-        setIsModalOpen(false);
-
-        try {
-            const response = await fetch('http://localhost:5000/api/notes', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${session.accessToken}`,
-                },
-                body: JSON.stringify({ title: newNote.title, content: newNote.content }),
-            });
-            if (!response.ok) {
-                throw new Error('Failed to create note');
-            }
-
-            const data = await response.json();
-            console.log('Note created:', data);
-        } catch (error) {
-            console.error('Error creating note:', error);
-        }
-    };
-
-    // Видалення нотатки
-    const handleDeleteNote = (_id: string, e: React.MouseEvent) => {
-        e.stopPropagation();
-        setNotes(notes.filter((note) => note._id !== _id));
-    };
+    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+    const [selectedNote, setSelectedNote] = useState<Note | null>(null);
 
     useEffect(() => {
-        const fetchNotes = async () => {
-            try {
-                const response = await fetch('http://localhost:5000/api/notes', {
-                    headers: {
-                        Authorization: `Bearer ${session.accessToken}`,
-                    },
-                });
-                const data = await response.json();
-                setNotes([...data]);
-            } catch (error) {
-                console.error('Error fetching notes:', error);
-            }
-        };
-        fetchNotes();
-    }, [session.accessToken]);
+        getNotes(session, setNotes);
+    }, [session]);
 
     return (
         <div className="min-h-screen bg-gray-50 text-gray-900 font-sans antialiased">
@@ -130,12 +66,26 @@ export function Notes({ username, session }: Props) {
                         </button>
                     </div>
                 ) : (
-                    /* Сітка нотаток */
                     <div
                         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 fade-in-up"
                         style={{ animationDelay: '0.1s' }}>
                         {notes.map((note) => (
-                            <NoteCard key={note._id} note={note} handleDeleteNote={handleDeleteNote} />
+                            <NoteCard
+                                key={note._id}
+                                note={note}
+                                handleDeleteNote={(e) => handleDeleteNote(note._id, e, setNotes, notes, session)}
+                                handleUpdateNote={(id, updatedFields) =>
+                                    handleUpdateNote(
+                                        id,
+                                        updatedFields,
+                                        setIsUpdateModalOpen,
+                                        setSelectedNote,
+                                        setNotes,
+                                        notes,
+                                        session
+                                    )
+                                }
+                            />
                         ))}
                     </div>
                 )}
@@ -147,9 +97,42 @@ export function Notes({ username, session }: Props) {
                     title={title}
                     content={content}
                     setIsModalOpen={setIsModalOpen}
-                    handleCreateNote={handleCreateNote}
+                    handleCreateNote={(e) =>
+                        handleCreateNote(
+                            e,
+                            title,
+                            content,
+                            setTitle,
+                            setContent,
+                            setIsModalOpen,
+                            setNotes,
+                            notes,
+                            session
+                        )
+                    }
                     setTitle={setTitle}
                     setContent={setContent}
+                />
+            )}
+
+            {/* Модальне вікно оновлення */}
+            {isUpdateModalOpen && selectedNote && (
+                <UpdateNotesModal
+                    title={selectedNote.title}
+                    content={selectedNote.content}
+                    _id={selectedNote._id}
+                    setIsUpdateModalOpen={setIsUpdateModalOpen}
+                    handleUpdateNote={(id, updatedFields) =>
+                        handleUpdateNote(
+                            id,
+                            updatedFields,
+                            setIsUpdateModalOpen,
+                            setSelectedNote,
+                            setNotes,
+                            notes,
+                            session
+                        )
+                    }
                 />
             )}
         </div>
