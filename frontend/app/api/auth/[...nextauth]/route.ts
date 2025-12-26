@@ -11,7 +11,11 @@ export const authOptions: NextAuthOptions = {
             },
             async authorize(credentials) {
                 // 🔥 запит на твій бек
+<<<<<<< Updated upstream
                 const res = await fetch('http://localhost:5000/api/auth/login', {
+=======
+                const res = await fetch('/api/auth/login', {
+>>>>>>> Stashed changes
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(credentials),
