@@ -26,7 +26,7 @@ export default function RegisterPage() {
             await registerSchema.validate({ username, email, password }, { abortEarly: false });
 
             // виконуємо запит на бек
-            const res = await fetch('https://fullnotes.onrender.com/api/auth/register', {
+            const res = await fetch(`${process.env.API_URL}/api/auth/register`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },

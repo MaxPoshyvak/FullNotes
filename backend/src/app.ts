@@ -7,7 +7,7 @@ const app = express();
 
 app.use(
     cors({
-        origin: 'https://fullnotes-frontend.onrender.com',
+        origin: ['https://fullnotes-frontend.onrender.com', 'http://localhost:3000'],
         credentials: true,
     })
 );
