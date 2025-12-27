@@ -28,6 +28,7 @@ export default function RegisterPage() {
             // виконуємо запит на бек
             const res = await fetch('https://fullnotes.onrender.com/api/auth/register', {
                 method: 'POST',
+                credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, email, password }),
             });
