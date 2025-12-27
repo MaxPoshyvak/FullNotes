@@ -91,6 +91,7 @@ export default function RootLayout({
             <head>
                 <meta httpEquiv="Content-Security-Policy" content="..." />
                 <link rel="icon" type="image/svg" href="/favicon.ico" />
+                <meta name="google-site-verification" content="EliDbmxg_vKG7Un_rO2WFKnhlC0q_-wxS9Qr9S-vbvA" />
             </head>
             <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
         </html>
