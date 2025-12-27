@@ -26,15 +26,17 @@ export default function RegisterPage() {
             await registerSchema.validate({ username, email, password }, { abortEarly: false });
 
             // виконуємо запит на бек
-            const res = await fetch(`${process.env.API_URL}/api/auth/register`, {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, email, password }),
+                body: JSON.stringify({ email, password, username }),
             });
 
+            const data = await res.json();
+
             if (!res.ok) {
-                alert('Помилка реєстрації');
+                alert(data.message || 'Сталася помилка під час реєстрації');
                 return;
             }
 

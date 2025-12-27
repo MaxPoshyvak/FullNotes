@@ -70,6 +70,10 @@ export const registerController = async (req: Request, res: Response) => {
     res.status(201).json({
         status: 'ok',
         message: 'User registered successfully',
-        user: newUser._id,
+        user: {
+            id: newUser._id.toString(),
+            email: newUser.email,
+            username: newUser.username,
+        },
     });
 };
