@@ -64,6 +64,7 @@ Create .env.local:
 ```bash
 NEXTAUTH_URL=http://localhost:3000
 NEXTAUTH_SECRET=your_jwt_secret
+NEXT_PUBLIC_API_URL=https://backend.link.example
 ```
 Run frontend:
 ```bash
