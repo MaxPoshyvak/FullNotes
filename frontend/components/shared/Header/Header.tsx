@@ -3,6 +3,7 @@ import { cn } from '@/lib/utils';
 import { Search } from 'lucide-react';
 
 import { signOut } from 'next-auth/react';
+import Swal from 'sweetalert2';
 
 interface Props {
     className?: string;
@@ -16,15 +17,34 @@ export const Header: React.FC<Props> = ({ className, username }) => {
                 <div className="flex justify-between h-16">
                     <div className="flex items-center gap-3">
                         <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-lg shadow-md shadow-blue-500/30">
-                            M
+                            N
                         </div>
-                        <span className="font-bold text-xl text-gray-900">Мої Нотатки</span>
+                        <span className="font-bold text-xl text-gray-900">FullNotes</span>
                     </div>
 
                     <div className="flex items-center gap-4">
                         <button
                             className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-blue-400 hover:bg-blue-500 text-white text-sm font-semibold rounded-xl transition-all shadow-lg shadow-blue-600/30 hover:-translate-y-0.5"
-                            onClick={() => signOut({ callbackUrl: '/login' })}>
+                            onClick={() =>
+                                Swal.fire({
+                                    title: 'Are you sure?',
+                                    text: 'Sign out from your account?',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonColor: '#3085d6',
+                                    cancelButtonColor: '#d33',
+                                    confirmButtonText: 'Yes, sign out!',
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        signOut({ callbackUrl: '/login' });
+                                        Swal.fire({
+                                            title: 'Signed out!',
+                                            text: 'You have been signed out.',
+                                            icon: 'success',
+                                        });
+                                    }
+                                })
+                            }>
                             Sign out
                         </button>
                         <div className="hidden sm:flex text-sm text-gray-500 bg-gray-100 px-3 py-1.5 rounded-lg items-center gap-2">

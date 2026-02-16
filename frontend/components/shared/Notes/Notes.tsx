@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { Plus, FileText } from 'lucide-react';
+import { signIn } from 'next-auth/react';
 
 import { CreateNotesModal, NoteCard, UpdateNotesModal } from '@/components/ui/';
 import { Header } from '@/components/shared/';

@@ -1,7 +1,6 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-    // 2. БЕЗПЕКА: Дозволяємо картинки та скрипти
     async headers() {
         return [
             {
@@ -9,8 +8,14 @@ const nextConfig: NextConfig = {
                 headers: [
                     {
                         key: 'Content-Security-Policy',
-                        // Дозволяємо підключення і до localhost, і до Render
-                        value: `default-src 'self'; connect-src 'self' http://localhost:3000 http://localhost:5000 ${process.env.NEXT_PUBLIC_API_URL}; img-src 'self' data: ${process.env.NEXT_PUBLIC_API_URL} http://localhost:5000 ; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline';`,
+                        value:
+                            "default-src 'self'; " +
+                            // 👇 ДОДАЛИ: http://127.0.0.1:5001
+                            "connect-src 'self' http://localhost:5001 http://127.0.0.1:5001; " +
+                            // 👇 ПРО ВСЯК ВИПАДОК ТУТ ТЕЖ:
+                            "img-src 'self' data: http://localhost:5001 http://127.0.0.1:5001; " +
+                            "script-src 'self' 'unsafe-inline' 'unsafe-eval'; " +
+                            "style-src 'self' 'unsafe-inline';",
                     },
                 ],
             },

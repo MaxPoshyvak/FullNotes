@@ -1,6 +1,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Pencil, Trash2 } from 'lucide-react';
+import Swal from 'sweetalert2';
 
 interface Props {
     className?: string;
@@ -31,7 +32,26 @@ export const NoteCard: React.FC<Props> = ({ className, note, handleDeleteNote, h
                         <Pencil className="w-4 h-4" />
                     </button>
                     <button
-                        onClick={handleDeleteNote}
+                        onClick={(e) =>
+                            Swal.fire({
+                                title: 'Are you sure?',
+                                text: "You won't be able to revert this!",
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: 'Yes, delete it!',
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    handleDeleteNote(e);
+                                    Swal.fire({
+                                        title: 'Deleted!',
+                                        text: 'Your note has been deleted.',
+                                        icon: 'success',
+                                    });
+                                }
+                            })
+                        }
                         className="text-gray-400 hover:text-red-500 transition-colors p-1 rounded-md hover:bg-red-50 opacity-0 group-hover:opacity-100"
                         title="Видалити">
                         <Trash2 className="w-4 h-4" />

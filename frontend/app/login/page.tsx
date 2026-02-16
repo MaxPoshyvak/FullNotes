@@ -4,6 +4,7 @@ import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import { Eye, EyeOff, LockKeyhole, Mail } from 'lucide-react';
 import Link from 'next/link';
+import Swal from 'sweetalert2';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -21,6 +22,32 @@ export default function LoginPage() {
             password,
             callbackUrl: '/dashboard',
         });
+    };
+    const loginWithoutPassword = async () => {
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/magic-link`, {
+                // Перевір, чи правильний URL
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // 👈 ОБОВ'ЯЗКОВО цей рядок
+                },
+                body: JSON.stringify({ email: email }), // Переконайся, що змінна email не пуста
+            });
+
+            if (!res.ok) {
+                const errorData = await res.json(); // Спробуй прочитати, що саме бекенд каже
+                console.error('Server Error:', errorData);
+                throw new Error('Failed to send magic link');
+            }
+
+            Swal.fire({
+                title: 'Check your email!',
+                text: 'We have sent you a magic link!',
+                icon: 'success',
+            });
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     return (
@@ -127,12 +154,34 @@ export default function LoginPage() {
                             </div>
                         </div>
 
-                        <div>
+                        <div className="flex flex-col gap-2">
                             <button
-                                onClick={login}
+                                onClick={() =>
+                                    email && password
+                                        ? login()
+                                        : Swal.fire({
+                                              title: 'Error!',
+                                              text: 'Please enter your email and password!',
+                                              icon: 'error',
+                                          })
+                                }
                                 type="submit"
                                 className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:-translate-y-0.5 shadow-lg shadow-blue-600/30">
                                 Увійти
+                            </button>
+                            <button
+                                onClick={() =>
+                                    email
+                                        ? loginWithoutPassword()
+                                        : Swal.fire({
+                                              title: 'Error!',
+                                              text: 'Please enter your email!',
+                                              icon: 'error',
+                                          })
+                                }
+                                type="button"
+                                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-gray-600/60 hover:bg-gray-700/70 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-200 transform hover:-translate-y-0.5 shadow-lg shadow-blue-600/30">
+                                Увійти без пароля
                             </button>
                         </div>
                     </form>

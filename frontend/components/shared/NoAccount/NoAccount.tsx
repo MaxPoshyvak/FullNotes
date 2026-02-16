@@ -8,9 +8,9 @@ export const NoAccount = function () {
             {/* Логотип (невеликий зверху) */}
             <div className="absolute top-8 left-8 flex items-center gap-2 fade-in-up">
                 <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-lg shadow-md shadow-blue-500/30">
-                    M
+                    N
                 </div>
-                <span className="font-bold text-xl text-gray-900">ModernApp</span>
+                <span className="font-bold text-xl text-gray-900">FullNotes</span>
             </div>
 
             <div className="max-w-md w-full text-center">
